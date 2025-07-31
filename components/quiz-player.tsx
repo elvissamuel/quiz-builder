@@ -39,7 +39,10 @@ export function QuizPlayer({ quiz }: QuizPlayerProps) {
     try {
       const response = await fetch(`/api/quizzes/${quiz.id}/submit`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache",
+        },
         body: JSON.stringify({
           answers: Object.entries(answers).map(([questionId, answerId]) => ({
             questionId,

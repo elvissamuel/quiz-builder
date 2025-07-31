@@ -126,7 +126,10 @@ export function QuizBuilder({ quiz }: QuizBuilderProps) {
 
       const response = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache",
+        },
         body: JSON.stringify(formData),
       })
 
@@ -141,6 +144,8 @@ export function QuizBuilder({ quiz }: QuizBuilderProps) {
         description: quiz ? "Quiz updated successfully" : "Quiz created successfully",
       })
 
+      // Force refresh the page to ensure fresh data
+      router.refresh()
       router.push("/admin")
     } catch (error) {
       toast({

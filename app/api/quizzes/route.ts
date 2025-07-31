@@ -25,7 +25,14 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     })
 
-    return NextResponse.json(quizzes)
+    // Add cache control headers to prevent caching
+    return NextResponse.json(quizzes, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    })
   } catch (error) {
     console.error("Error fetching quizzes:", error)
     return NextResponse.json({ error: "Failed to fetch quizzes" }, { status: 500 })
@@ -111,7 +118,14 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json(completeQuiz)
+    // Add cache control headers and revalidate
+    return NextResponse.json(completeQuiz, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    })
   } catch (error) {
     console.error("Error creating quiz:", error)
     return NextResponse.json({ error: "Failed to create quiz" }, { status: 500 })

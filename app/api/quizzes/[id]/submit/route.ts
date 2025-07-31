@@ -44,7 +44,14 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       },
     })
 
-    return NextResponse.json({ resultId: winningResultId })
+    // Add cache control headers to prevent caching
+    return NextResponse.json({ resultId: winningResultId }, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    })
   } catch (error) {
     console.error("Error submitting quiz:", error)
     return NextResponse.json({ error: "Failed to submit quiz" }, { status: 500 })

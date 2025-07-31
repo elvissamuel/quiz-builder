@@ -27,7 +27,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: "Quiz not found" }, { status: 404 })
     }
 
-    return NextResponse.json(quiz)
+    // Add cache control headers to prevent caching
+    return NextResponse.json(quiz, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    })
   } catch (error) {
     console.error("Error fetching quiz:", error)
     return NextResponse.json({ error: "Failed to fetch quiz" }, { status: 500 })
@@ -90,7 +97,14 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       },
     })
 
-    return NextResponse.json(quiz)
+    // Add cache control headers to prevent caching
+    return NextResponse.json(quiz, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    })
   } catch (error) {
     console.error("Error updating quiz:", error)
     return NextResponse.json({ error: "Failed to update quiz" }, { status: 500 })
@@ -107,7 +121,14 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       where: { id: params.id },
     })
 
-    return NextResponse.json({ success: true })
+    // Add cache control headers to prevent caching
+    return NextResponse.json({ success: true }, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    })
   } catch (error) {
     console.error("Error deleting quiz:", error)
     return NextResponse.json({ error: "Failed to delete quiz" }, { status: 500 })
