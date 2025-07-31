@@ -4,6 +4,12 @@ import { notFound } from "next/navigation"
 
 async function getResult(quizId: string, resultId: string) {
   try {
+    // Check if we're in a build environment
+    if (process.env.NODE_ENV === "production" && !process.env.DATABASE_URL) {
+      console.log("Skipping database fetch during build")
+      return null
+    }
+
     const result = await prisma.result.findFirst({
       where: {
         id: resultId,
@@ -13,6 +19,8 @@ async function getResult(quizId: string, resultId: string) {
         quiz: true,
       },
     })
+    
+    console.log(`Fetched result: ${result?.title || 'not found'}`)
     return result
   } catch (error) {
     console.error("Error fetching result:", error)

@@ -6,6 +6,12 @@ import { Plus, Play } from "lucide-react"
 
 async function getQuizzes() {
   try {
+    // Check if we're in a build environment
+    if (process.env.NODE_ENV === "production" && !process.env.DATABASE_URL) {
+      console.log("Skipping database fetch during build")
+      return []
+    }
+
     const quizzes = await prisma.quiz.findMany({
       orderBy: { createdAt: "desc" },
       include: {
@@ -15,9 +21,12 @@ async function getQuizzes() {
         },
       },
     })
+    
+    console.log(`Fetched ${quizzes.length} quizzes from database`)
     return quizzes
   } catch (error) {
     console.error("Error fetching quizzes:", error)
+    // Return empty array instead of throwing to prevent build failures
     return []
   }
 }

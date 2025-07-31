@@ -4,6 +4,12 @@ import { notFound } from "next/navigation"
 
 async function getQuiz(id: string) {
   try {
+    // Check if we're in a build environment
+    if (process.env.NODE_ENV === "production" && !process.env.DATABASE_URL) {
+      console.log("Skipping database fetch during build")
+      return null
+    }
+
     const quiz = await prisma.quiz.findUnique({
       where: { id },
       include: {
@@ -16,6 +22,8 @@ async function getQuiz(id: string) {
         results: true,
       },
     })
+    
+    console.log(`Fetched quiz: ${quiz?.title || 'not found'}`)
     return quiz
   } catch (error) {
     console.error("Error fetching quiz:", error)
