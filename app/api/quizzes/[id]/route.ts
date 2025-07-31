@@ -1,7 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
+// Prevent database operations during build time
+const isBuildTime = process.env.NODE_ENV === "production" && !process.env.DATABASE_URL
+
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  if (isBuildTime) {
+    return NextResponse.json({ error: "Service unavailable during build" }, { status: 503 })
+  }
+
   try {
     const quiz = await prisma.quiz.findUnique({
       where: { id: params.id },
@@ -28,6 +35,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  if (isBuildTime) {
+    return NextResponse.json({ error: "Service unavailable during build" }, { status: 503 })
+  }
+
   try {
     const body = await request.json()
     const { title, description, creatorName, questions, results } = body
@@ -87,6 +98,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  if (isBuildTime) {
+    return NextResponse.json({ error: "Service unavailable during build" }, { status: 503 })
+  }
+
   try {
     await prisma.quiz.delete({
       where: { id: params.id },

@@ -1,0 +1,13 @@
+{
+  "buildCommand": "npx prisma generate && next build",
+  "installCommand": "bun install",
+  "framework": "nextjs",
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "NODE_ENV": "production"
+  }
+} 

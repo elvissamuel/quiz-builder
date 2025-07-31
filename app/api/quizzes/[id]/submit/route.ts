@@ -1,7 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
+// Prevent database operations during build time
+const isBuildTime = process.env.NODE_ENV === "production" && !process.env.DATABASE_URL
+
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+  if (isBuildTime) {
+    return NextResponse.json({ error: "Service unavailable during build" }, { status: 503 })
+  }
+
   try {
     const body = await request.json()
     const { answers } = body
