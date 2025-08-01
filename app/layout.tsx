@@ -10,7 +10,6 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Personality Quiz Builder",
   description: "Create and share personality quizzes with your audience",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({
